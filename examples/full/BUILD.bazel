@@ -1,0 +1,85 @@
+exports_files(["check_file_hash.sh"])
+
+sh_test(
+    name = "check_release_notes_1_30_2",
+    srcs = ["check_file_hash.sh"],
+    args = [
+        "$(location @k8s_1_30_2_release_notes//file)",
+        "e879f76b7bac8effe4cc53bce034f258ce15b2825f3018c7078f25e832c3feb8",
+    ],
+    data = ["@k8s_1_30_2_release_notes//file"],
+)
+
+sh_test(
+    name = "check_release_notes_1_30_3",
+    srcs = ["check_file_hash.sh"],
+    args = [
+        "$(location @k8s_1_30_3_release_notes//file)",
+        "909b62c80b5ce1f5075c9c9301f79673727a77c46a525f12c4753370536bfe2c",
+    ],
+    data = ["@k8s_1_30_3_release_notes//file"],
+)
+
+sh_test(
+    name = "check_part_of_gcs_archive",
+    srcs = ["check_file_hash.sh"],
+    args = [
+        "$(location @kubernetes_1_30_3//:README.md)",
+        "5ef6a2416ab1ef3d3dcf0961a270cdbb049787b8c2428b631db1b0fd5670109c",
+    ],
+    data = ["@kubernetes_1_30_3//:README.md"],
+)
+
+sh_test(
+    name = "check_symlink_hub",
+    srcs = ["check_file_hash.sh"],
+    args = [
+        "$(location @symlink_hub_repo//:release/v1.30.3/bin/linux/amd64/kubectl)",
+        "abd83816bd236b266c3643e6c852b446f068fe260f3296af1a25b550854ec7e5",
+        "$(location @symlink_hub_repo//:release/v1.30.3/bin/linux/arm64/kubectl)",
+        "c6f9568f930b16101089f1036677bb15a3185e9ed9b8dbce2f518fb5a52b6787",
+        "$(location @symlink_hub_repo//:release/v1.30.3/bin/darwin/amd64/kubectl)",
+        "b3ccb0ba6f7972074b0a1e13340307abfd5a5eef540c521a88b368891ec5cd6b",
+        "$(location @symlink_hub_repo//:release/v1.30.3/bin/darwin/arm64/kubectl)",
+        "71f3febd165423991e0aabef5750cb8de6fc43e93ea130767d12eb183cc63a5b",
+        "$(location @symlink_hub_repo//:custom/local/path/SHA256SUMS)",
+        "3a26f0f0f57770363ce072afdec016204ba4f91dacf07c21be583aaa0e07eee6",
+    ],
+    data = [
+        "@symlink_hub_repo//:custom/local/path/SHA256SUMS",
+        "@symlink_hub_repo//:release/v1.30.3/bin/darwin/amd64/kubectl",
+        "@symlink_hub_repo//:release/v1.30.3/bin/darwin/arm64/kubectl",
+        "@symlink_hub_repo//:release/v1.30.3/bin/linux/amd64/kubectl",
+        "@symlink_hub_repo//:release/v1.30.3/bin/linux/arm64/kubectl",
+    ],
+)
+
+sh_test(
+    name = "check_alias_hub",
+    srcs = ["check_file_hash.sh"],
+    args = [
+        "$(location @alias_hub_repo//:release/v1.30.3/bin/linux/amd64/kubectl)",
+        "abd83816bd236b266c3643e6c852b446f068fe260f3296af1a25b550854ec7e5",
+    ],
+    data = ["@alias_hub_repo//:release/v1.30.3/bin/linux/amd64/kubectl"],
+)
+
+sh_test(
+    name = "check_copy_hub",
+    srcs = ["check_file_hash.sh"],
+    args = [
+        "$(location @copy_hub_repo//:release/v1.30.3/bin/linux/amd64/kubectl)",
+        "abd83816bd236b266c3643e6c852b446f068fe260f3296af1a25b550854ec7e5",
+    ],
+    data = ["@copy_hub_repo//:release/v1.30.3/bin/linux/amd64/kubectl"],
+)
+
+sh_test(
+    name = "check_eager",
+    srcs = ["check_file_hash.sh"],
+    args = [
+        "$(location @eager_repo//:release/v1.30.3/bin/linux/amd64/kubectl)",
+        "abd83816bd236b266c3643e6c852b446f068fe260f3296af1a25b550854ec7e5",
+    ],
+    data = ["@eager_repo//:release/v1.30.3/bin/linux/amd64/kubectl"],
+)

@@ -1,0 +1,18 @@
+{
+    "release/v1.30.3/bin/linux/amd64/kubectl": {
+      "sha256": "abd83816bd236b266c3643e6c852b446f068fe260f3296af1a25b550854ec7e5"
+    },
+   "release/v1.30.3/bin/linux/arm64/kubectl": {
+      "sha256": "c6f9568f930b16101089f1036677bb15a3185e9ed9b8dbce2f518fb5a52b6787"
+    },
+    "release/v1.30.3/bin/darwin/amd64/kubectl": {
+      "sha256": "b3ccb0ba6f7972074b0a1e13340307abfd5a5eef540c521a88b368891ec5cd6b"
+    },
+   "release/v1.30.3/bin/darwin/arm64/kubectl": {
+      "sha256": "71f3febd165423991e0aabef5750cb8de6fc43e93ea130767d12eb183cc63a5b"
+    },
+    "custom/local/path/SHA256SUMS": {
+      "remote_path": "release/v1.30.3/SHA256SUMS",
+      "integrity": "sha256-Oibw8PV3cDY84HKv3sAWIEuk+R2s8Hwhvlg6qg4H7uY="
+    }
+}

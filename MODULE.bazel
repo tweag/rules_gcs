@@ -1,0 +1,16 @@
+module(
+    name = "rules_gcs",
+    version = "0.0.1",
+    compatibility_level = 0,
+)
+
+bazel_dep(
+    name = "bazel_skylib",
+    version = "1.7.1",
+    dev_dependency = True,
+)
+bazel_dep(
+    name = "stardoc",
+    version = "0.7.0",
+    dev_dependency = True,
+)

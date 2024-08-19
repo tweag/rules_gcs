@@ -1,0 +1,61 @@
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+alias(
+    name = "kubectl",
+    actual = select({
+        ":darwin_amd64": "@kubectl_binaries//:release/v1.30.3/bin/darwin/amd64/kubectl",
+        ":darwin_arm64": "@kubectl_binaries//:release/v1.30.3/bin/darwin/amd64/kubectl",
+        ":linux_amd64": "@kubectl_binaries//:release/v1.30.3/bin/linux/amd64/kubectl",
+        ":linux_arm64": "@kubectl_binaries//:release/v1.30.3/bin/linux/arm64/kubectl",
+    }),
+)
+
+selects.config_setting_group(
+    name = "linux_amd64",
+    match_all = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+)
+
+selects.config_setting_group(
+    name = "linux_arm64",
+    match_all = [
+        "@platforms//os:linux",
+        "@platforms//cpu:arm64",
+    ],
+)
+
+selects.config_setting_group(
+    name = "darwin_amd64",
+    match_all = [
+        "@platforms//os:macos",
+        "@platforms//cpu:x86_64",
+    ],
+)
+
+selects.config_setting_group(
+    name = "darwin_arm64",
+    match_all = [
+        "@platforms//os:macos",
+        "@platforms//cpu:arm64",
+    ],
+)
+
+# sanity check to ensure kubectl is marked executable
+genrule(
+    name = "kubectl_version",
+    outs = ["version.txt"],
+    cmd = "$(location :kubectl) version --client=true > \"$@\"",
+    tools = [":kubectl"],
+)
+
+sh_test(
+    name = "check_version",
+    srcs = ["//:check_file_hash.sh"],
+    args = [
+        "$(location :kubectl_version)",
+        "ed42ec8f283c52dae409f0a59c9687d12ec60aeaf54aae2bf459e9d3e2b0de44",
+    ],
+    data = [":kubectl_version"],
+)
