@@ -1,3 +1,6 @@
+load("@rules_bazel_integration_test//bazel_integration_test:defs.bzl", "integration_test_utils")
+
+
 # This target collects all of the parent workspace files needed by the child workspaces.
 filegroup(
     name = "local_repository_files",
@@ -12,5 +15,12 @@ filegroup(
         "//gcs/private/repo_rules:all_files",
         "//gcs/private/rules:all_files",
     ],
+    visibility = ["//:__subpackages__"],
+)
+
+test_suite(
+    name = "all_integration_tests",
+    tags = integration_test_utils.DEFAULT_INTEGRATION_TEST_TAGS,
+    tests = ["//examples:integration_tests"],
     visibility = ["//:__subpackages__"],
 )
