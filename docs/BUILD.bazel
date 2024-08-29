@@ -13,3 +13,9 @@ stardoc(
     input = "//gcs:extensions.bzl",
     deps = ["//gcs/private/extensions"],
 )
+
+filegroup(
+    name = "all_files",
+    srcs = glob(["*"]),
+    visibility = ["//:__subpackages__"],
+)

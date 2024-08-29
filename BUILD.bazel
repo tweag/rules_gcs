@@ -1,0 +1,16 @@
+# This target collects all of the parent workspace files needed by the child workspaces.
+filegroup(
+    name = "local_repository_files",
+    srcs = [
+        "BUILD.bazel",
+        "MODULE.bazel",
+        "WORKSPACE",
+        "//docs:all_files",
+        "//gcs:all_files",
+        "//gcs/private:all_files",
+        "//gcs/private/extensions:all_files",
+        "//gcs/private/repo_rules:all_files",
+        "//gcs/private/rules:all_files",
+    ],
+    visibility = ["//:__subpackages__"],
+)

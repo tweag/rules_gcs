@@ -19,3 +19,9 @@ exports_files([
     "extensions.bzl",
     "repo_rules.bzl",
 ])
+
+filegroup(
+    name = "all_files",
+    srcs = glob(["*"]),
+    visibility = ["//:__subpackages__"],
+)
