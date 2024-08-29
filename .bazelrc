@@ -5,3 +5,7 @@ query --deleted_packages=examples/full,examples/full/tool_test
 
 # for stardoc
 common --incompatible_enable_proto_toolchain_resolution
+
+import %workspace%/.bazelrc.ci
+
+try-import %workspace%/local.bazelrc
