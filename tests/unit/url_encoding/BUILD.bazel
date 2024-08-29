@@ -1,0 +1,3 @@
+load(":test_url_encoding.bzl", "url_encoding_test_suite")
+
+url_encoding_test_suite(name="test_url_encoding")
