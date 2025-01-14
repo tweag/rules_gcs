@@ -1,0 +1,36 @@
+module(
+    name = "full_example",
+    version = "0.0.0",
+)
+
+bazel_dep(
+    name = "rules_gcs",
+    version = "0.0.0",
+)
+local_path_override(
+    module_name = "rules_gcs",
+    path = "../..",
+)
+
+bazel_dep(
+    name = "tweag-credential-helper",
+    version = "0.0.1",
+)
+bazel_dep(
+    name = "bazel_skylib",
+    version = "1.7.1",
+)
+bazel_dep(
+    name = "platforms",
+    version = "0.0.10",
+)
+
+
+gcs_bucket = use_extension("@rules_gcs//gcs:extensions.bzl", "gcs_bucket")
+gcs_bucket.from_file(
+    name = "hello_world",
+    bucket = "rules_gcs",
+    lockfile = "//:gcs_lock.json",
+)
+
+use_repo(gcs_bucket, "hello_world")
