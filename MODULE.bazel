@@ -31,7 +31,7 @@ bazel_dep(
 bazel_dep(
     name = "rules_testing",
     version = "0.6.0",
-    dev_dependency=True,
+    dev_dependency = True,
 )
 bazel_dep(
     name = "stardoc",
@@ -73,7 +73,5 @@ bazel_binaries = use_extension(
     dev_dependency = True,
 )
 bazel_binaries.download(version = "7.1.0")
-bazel_binaries.download(version = "7.3.1")
-bazel_binaries.download(version = "latest")
-bazel_binaries.download(version = "last_green")
-use_repo(bazel_binaries, "bazel_binaries", "bazel_binaries_bazelisk", "build_bazel_bazel_7_1_0", "build_bazel_bazel_7_3_1", "build_bazel_bazel_last_green", "build_bazel_bazel_latest")
+bazel_binaries.download(version = "8.0.0")
+use_repo(bazel_binaries, "bazel_binaries", "bazel_binaries_bazelisk", "build_bazel_bazel_7_1_0", "build_bazel_bazel_8_0_0")
