@@ -18,7 +18,16 @@ You can find the latest version of [`rules_gcs` on the Bazel Central Registry][b
 bazel_dep(name = "rules_gcs", version = "1.0.0")
 ```
 
-Additionally, you need to vendor the credential helper in your own repository or install it in the `$PATH`:
+Additionally, you need to configure a credential helper for `storage.googleapis.com`. We give you two options:
+
+The recommended credential helper is [`tweag-credential-helper`][tweag-credential-helper]. The project README will guide you through the required setup. An example is also provided [here](/examples/tweag-credential-helper).
+
+<details>
+<summary>
+Alternatively, you can use a small bash script that depends on <code>gcloud</code>. Please note that this method can lead to individual downloads taking a long time, since <code>gcloud</code> will not cache credentials on its own (and some authentication flows are slow).
+</summary>
+
+Add the credential helper shell script to your own repository or install it in the `$PATH`:
 
 ```sh
 mkdir -p tools
@@ -36,6 +45,8 @@ common --experimental_repository_cache_hardlinks
 ```
 
 It is important to limit the scope of the credential helper to that domain, since it does not yet support parsing of the requested uri.
+
+</details>
 
 ## Usage
 
@@ -243,7 +254,7 @@ Examples:
     WARNING: Error retrieving auth headers, continuing without: Failed to get credentials for 'https://storage.googleapis.com/broad-public-datasets/intervals_hg38.list' from helper 'tools/credential-helper': Cannot run program "tools/credential-helper" (in directory "..."): error=2, No such file or directory
     ```
 
-    You need to install download and vendor the [credential helper script][credential-helper] as explained [above](#installation).
+    You need to install a credential helper (either [`tweag-credential-helper`][tweag-credential-helper], the [shell script][credential-helper], or your own) as explained [above](#installation).
 
 - Credential helper not working
 
@@ -278,4 +289,5 @@ _`rules_gcs` was initially developed by [IMAX][imax] and is maintained by Tweag.
 [credential-helper]: /tools/credential-helper
 [bcr]: https://registry.bazel.build/modules/rules_gcs
 [imax]: https://www.imax.com/en/us/sct
-[^1]: The `gcloud` CLI tool is still required to obtain authentication tokens in the credential helper.
+[tweag-credential-helper]: https://github.com/tweag/credential-helper
+[^1]: The `gcloud` CLI tool is still required to obtain authentication tokens when using the provided shell script as a credential helper. We recommend [`tweag-credential-helper`][tweag-credential-helper], which doesn't depend on `gcloud`.
