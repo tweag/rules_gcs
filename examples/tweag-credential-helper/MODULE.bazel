@@ -1,5 +1,5 @@
 module(
-    name = "full_example",
+    name = "tweag_credential_helper_example",
     version = "0.0.0",
 )
 
@@ -16,16 +16,12 @@ bazel_dep(
     name = "tweag-credential-helper",
     version = "0.0.1",
 )
-bazel_dep(
-    name = "bazel_skylib",
-    version = "1.7.1",
-)
-bazel_dep(
-    name = "platforms",
-    version = "0.0.10",
-)
 
-
+# This adds a dependency on a private GCS bucket
+# You need to run the following command once as a setup:
+#
+#     bazel run @tweag-credential-helper//installer
+#
 gcs_bucket = use_extension("@rules_gcs//gcs:extensions.bzl", "gcs_bucket")
 gcs_bucket.from_file(
     name = "hello_world",
