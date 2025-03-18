@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+load("//gcs/private:jsonpath.bzl", "walk_jsonpath")
 load("//gcs/private:url_encoding.bzl", "url_encode")
 
 def parse_gs_url(url):
@@ -75,13 +76,14 @@ def download_and_extract_args(attr, bucket_name, remote_path):
 def bucket_url(bucket, object_path):
     return "https://storage.googleapis.com/{}/{}".format(bucket, url_encode(object_path))
 
-def deps_from_file(module_ctx, lockfile_label):
+def deps_from_file(module_ctx, lockfile_label, jsonpath):
     lockfile_path = module_ctx.path(lockfile_label)
     lockfile_content = module_ctx.read(lockfile_path)
-    return parse_lockfile(lockfile_content)
+    return parse_lockfile(lockfile_content, jsonpath)
 
-def parse_lockfile(lockfile_content):
+def parse_lockfile(lockfile_content, jsonpath):
     lockfile = json.decode(lockfile_content)
+    lockfile = walk_jsonpath(lockfile, jsonpath)
 
     # the deps map should be a dict from local_path to object info
     if type(lockfile) != type({}):
