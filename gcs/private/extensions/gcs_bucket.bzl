@@ -42,7 +42,7 @@ def _gcs_bucket_impl(module_ctx):
                 root_module_direct_dev_deps.append(from_file.name)
             else:
                 root_module_direct_deps.append(from_file.name)
-            deps = deps_from_file(module_ctx, from_file.lockfile)
+            deps = deps_from_file(module_ctx, from_file.lockfile, from_file.lockfile_jsonpath)
             if from_file.method != "eager":
                 for local_path, info in deps.items():
                     args = dep_to_blob_repo(from_file.bucket, local_path, info)
@@ -86,6 +86,7 @@ def generate_hub_repo(from_file_tag):
     generator(
         name = from_file_tag.name,
         lockfile = from_file_tag.lockfile,
+        lockfile_jsonpath = from_file_tag.lockfile_jsonpath,
         bucket = from_file_tag.bucket,
     )
 
@@ -147,6 +148,9 @@ _from_file_attrs = {
     "lockfile": attr.label(
         doc = "JSON lockfile containing objects to load from the GCS bucket",
         mandatory = True,
+    ),
+    "lockfile_jsonpath": attr.string(
+        doc = "JSONPath expression referencing the dict of paths. By default, the top-level object is used.",
     ),
     "method": attr.string(
         doc = """Method used for downloading:

@@ -19,7 +19,7 @@ load("//gcs/private:util.bzl", "deps_from_file", "object_repo_name")
 
 def _alias_hub_repo_impl(repository_ctx):
     repository_ctx.report_progress("Rebuilding GCS alias tree")
-    deps = deps_from_file(repository_ctx, repository_ctx.attr.lockfile)
+    deps = deps_from_file(repository_ctx, repository_ctx.attr.lockfile, repository_ctx.attr.lockfile_jsonpath)
     build_file_content = ""
     for local_path, info in deps.items():
         build_file_content += dep_to_alias_build_file(repository_ctx.attr.bucket, local_path, info["remote_path"])
@@ -42,12 +42,13 @@ alias_hub_repo = repository_rule(
         "lockfile": attr.label(
             doc = "Map of dependency files to load from the GCS bucket",
         ),
+        "lockfile_jsonpath": attr.string(),
     },
 )
 
 def _symlink_hub_repo_impl(repository_ctx):
     repository_ctx.report_progress("Rebuilding GCS symlink tree")
-    deps = deps_from_file(repository_ctx, repository_ctx.attr.lockfile)
+    deps = deps_from_file(repository_ctx, repository_ctx.attr.lockfile, repository_ctx.attr.lockfile_jsonpath)
     build_file_content = """load("@rules_gcs//gcs/private/rules:symlink.bzl", "symlink")\n"""
     for local_path, info in deps.items():
         build_file_content += dep_to_symlink_build_file(repository_ctx.attr.bucket, local_path, info["remote_path"])
@@ -70,12 +71,13 @@ symlink_hub_repo = repository_rule(
         "lockfile": attr.label(
             doc = "Map of dependency files to load from the GCS bucket",
         ),
+        "lockfile_jsonpath": attr.string(),
     },
 )
 
 def _copy_hub_repo_impl(repository_ctx):
     repository_ctx.report_progress("Rebuilding GCS copy tree")
-    deps = deps_from_file(repository_ctx, repository_ctx.attr.lockfile)
+    deps = deps_from_file(repository_ctx, repository_ctx.attr.lockfile, repository_ctx.attr.lockfile_jsonpath)
     build_file_content = """load("@rules_gcs//gcs/private/rules:copy.bzl", "copy")\n"""
     for local_path, info in deps.items():
         build_file_content += dep_to_copy_build_file(repository_ctx.attr.bucket, local_path, info["remote_path"])
@@ -98,5 +100,6 @@ copy_hub_repo = repository_rule(
         "lockfile": attr.label(
             doc = "Map of dependency files to load from the GCS bucket",
         ),
+        "lockfile_jsonpath": attr.string(),
     },
 )

@@ -19,7 +19,7 @@ load("//gcs/private:util.bzl", "bucket_url", "deps_from_file")
 
 def _eager_impl(repository_ctx):
     repository_ctx.report_progress("Downloading files from gs://{}".format(repository_ctx.attr.lockfile))
-    deps = deps_from_file(repository_ctx, repository_ctx.attr.lockfile)
+    deps = deps_from_file(repository_ctx, repository_ctx.attr.lockfile, repository_ctx.attr.lockfile_jsonpath)
     build_file_content = """load("@rules_gcs//gcs/private/rules:copy.bzl", "copy")\n"""
 
     # start downloads
@@ -55,5 +55,6 @@ eager = repository_rule(
         "lockfile": attr.label(
             doc = "Map of dependency files to load from the GCS bucket",
         ),
+        "lockfile_jsonpath": attr.string(),
     },
 )

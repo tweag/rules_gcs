@@ -1,0 +1,3 @@
+load(":test_jsonpath.bzl", "jsonpath_test_suite")
+
+jsonpath_test_suite(name="test_jsonpath")
