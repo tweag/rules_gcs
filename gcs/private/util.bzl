@@ -60,8 +60,9 @@ def download_args(attr, bucket_name, remote_path):
     args.update({
         "output": output,
         "executable": attr.executable,
-        "block": False,
     })
+    if have_unblocked_downloads():
+        args["block"] = False
     return args
 
 def download_and_extract_args(attr, bucket_name, remote_path):
@@ -132,3 +133,11 @@ def _parse_bazel_version(bazel_version):
     if not version:
         return (999999, 999999, 999999)
     return tuple([int(n) for n in version.split(".")])
+
+def have_unblocked_downloads():
+    version = _parse_bazel_version(native.bazel_version)
+    if version[0] < 7:
+        return False
+    if version[0] == 7 and version[1] < 1:
+        return False
+    return True

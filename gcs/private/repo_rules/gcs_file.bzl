@@ -16,7 +16,7 @@ limitations under the License.
 """
 
 load("//gcs/private:url_encoding.bzl", "url_encode")
-load("//gcs/private:util.bzl", "bucket_url", "download_args", "parse_gs_url")
+load("//gcs/private:util.bzl", "bucket_url", "download_args", "parse_gs_url", "have_unblocked_downloads")
 
 def _gcs_file_impl(repository_ctx):
     gs_url = repository_ctx.attr.url
@@ -35,7 +35,8 @@ def _gcs_file_impl(repository_ctx):
     repository_ctx.file("file/BUILD.bazel", build_file_content)
 
     # wait for download to finish
-    waiter.wait()
+    if have_unblocked_downloads():
+        waiter.wait()
 
 _gcs_file_doc = """Downloads a file from a GCS bucket and makes it available to be used as a file group.
 
