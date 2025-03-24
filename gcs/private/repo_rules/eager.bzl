@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-load("//gcs/private:util.bzl", "bucket_url", "deps_from_file")
+load("//gcs/private:util.bzl", "bucket_url", "deps_from_file", "have_unblocked_downloads")
 
 def _eager_impl(repository_ctx):
     repository_ctx.report_progress("Downloading files from gs://{}".format(repository_ctx.attr.lockfile))
@@ -32,8 +32,9 @@ def _eager_impl(repository_ctx):
     repository_ctx.file("BUILD.bazel", "exports_files(glob([\"**\"]))".format(args["output"]))
 
     # wait for downloads to finish
-    for waiter in waiters:
-        waiter.wait()
+    if have_unblocked_downloads():
+        for waiter in waiters:
+            waiter.wait()
 
 def info_to_download_args(bucket_name, local_path, info):
     args = {
@@ -42,6 +43,8 @@ def info_to_download_args(bucket_name, local_path, info):
         "executable": True,
         "block": False,
     }
+    if not have_unblocked_downloads():
+        args.pop("block")
     if "sha256" in info:
         args["sha256"] = info["sha256"]
     if "integrity" in info:
