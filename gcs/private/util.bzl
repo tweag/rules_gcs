@@ -71,6 +71,10 @@ def download_and_extract_args(attr, bucket_name, remote_path):
         "stripPrefix": attr.strip_prefix,
         "rename_files": attr.rename_files,
     })
+    bazel_version = _parse_bazel_version(native.bazel_version)
+    if bazel_version[0] < 6:
+        # Bazel versions before 6.0.0 do not support the "rename_files" attribute
+        args.pop("rename_files")
     return args
 
 def bucket_url(bucket, object_path):
@@ -115,3 +119,16 @@ def object_repo_name(bucket_name, remote_path):
         "0123456789-._"
     cache = "o_" + bucket_name + "_" + url_encode(remote_path, escape = "_", unreserved = allowed_chars)
     return cache
+
+def _extract_version_number(bazel_version):
+    for i in range(len(bazel_version)):
+        c = bazel_version[i]
+        if not (c.isdigit() or c == "."):
+            return bazel_version[:i]
+    return bazel_version
+
+def _parse_bazel_version(bazel_version):
+    version = _extract_version_number(bazel_version)
+    if not version:
+        return (999999, 999999, 999999)
+    return tuple([int(n) for n in version.split(".")])
