@@ -15,7 +15,7 @@ Bazel rules for downloading files from [Google Cloud Storage (GCS)][gcs].
 You can find the latest version of [`rules_gcs` on the Bazel Central Registry][bcr]. Installation works by adding a `bazel_dep` line to `MODULE.bazel`.
 
 ```starlark
-bazel_dep(name = "rules_gcs", version = "1.0.0")
+bazel_dep(name = "rules_gcs", version = "1.0.1")
 ```
 
 Additionally, you need to configure a credential helper for `storage.googleapis.com`. We give you two options:
