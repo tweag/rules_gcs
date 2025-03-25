@@ -181,7 +181,7 @@ Examples:
 
 <pre>
 gcs_bucket = use_extension("@rules_gcs//gcs:extensions.bzl", "gcs_bucket")
-gcs_bucket.from_file(<a href="#gcs_bucket.from_file-name">name</a>, <a href="#gcs_bucket.from_file-bucket">bucket</a>, <a href="#gcs_bucket.from_file-dev_dependency">dev_dependency</a>, <a href="#gcs_bucket.from_file-lockfile">lockfile</a>, <a href="#gcs_bucket.from_file-method">method</a>)
+gcs_bucket.from_file(<a href="#gcs_bucket.from_file-name">name</a>, <a href="#gcs_bucket.from_file-bucket">bucket</a>, <a href="#gcs_bucket.from_file-dev_dependency">dev_dependency</a>, <a href="#gcs_bucket.from_file-lockfile">lockfile</a>, <a href="#gcs_bucket.from_file-lockfile_jsonpath">lockfile_jsonpath</a>, <a href="#gcs_bucket.from_file-method">method</a>)
 </pre>
 
 Downloads a collection of objects from a GCS bucket and makes them available under a single hub repository name.
@@ -244,6 +244,7 @@ Examples:
 | <a id="gcs_bucket.from_file-bucket"></a>bucket |  Name of the GCS bucket   | String | required |  |
 | <a id="gcs_bucket.from_file-dev_dependency"></a>dev_dependency |  If true, this dependency will be ignored if the current module is not the root module or `--ignore_dev_dependency` is enabled.   | Boolean | optional |  `False`  |
 | <a id="gcs_bucket.from_file-lockfile"></a>lockfile |  JSON lockfile containing objects to load from the GCS bucket   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="gcs_bucket.from_file-lockfile_jsonpath"></a>lockfile_jsonpath |  JSONPath expression referencing the dict of paths. By default, the top-level object is used.   | String | optional |  `""`  |
 | <a id="gcs_bucket.from_file-method"></a>method |  Method used for downloading:<br><br>`symlink`: lazy fetching with symlinks, `alias`: lazy fetching with alias targets, `copy`: lazy fetching with full file copies, `eager`: all objects are fetched eagerly   | String | optional |  `"symlink"`  |
 
 ## Troubleshooting
