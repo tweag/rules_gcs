@@ -1,20 +1,18 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-# TODO: add HTTP archive to example after v1.0.1
-# v1.0.0 doesn't work with Bazel 5
-# http_archive(
-#     name = "rules_gcs",
-#     urls = ["https://github.com/tweag/rules_gcs/releases/download/v1.0.1/rules_gcs-v1.0.1.tar.gz"],
-#     sha256 = "",
-#     strip_prefix = "rules_gcs-1.0.1",
-# )
-
-local_repository(
+# v1.0.1 is the earliest verson supporting Bazel 5.
+# Always use the latest version available.
+http_archive(
     name = "rules_gcs",
-    path = "../..",
+    urls = ["https://github.com/tweag/rules_gcs/releases/download/v1.0.1/rules_gcs-v1.0.1.tar.gz"],
+    sha256 = "410e0b7825562536e13cdfaef0bd0e28b1adbdd3ce72666628173dbfee094565",
+    strip_prefix = "rules_gcs-1.0.1",
 )
 
 load("@rules_gcs//gcs:repo_rules.bzl", "gcs_archive", "gcs_file")
+
+# Note: gcs_bucket.from_file is a module extension, which doesn't work out of the box with Bazel 5.
+# You can use gcs_file and gcs_archive to fetch individual files and archives from a bucket.
 
 gcs_archive(
     name = "kubernetes_1_30_3",
