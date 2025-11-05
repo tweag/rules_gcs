@@ -147,8 +147,29 @@ def update_integrity_attr(ctx, attrs, download_info):
     if not hasattr(ctx, "repo_metadata"):
         # Old Bazel versions do not support repo_metadata
         return None
+
     # We don't need to override the integrity attribute if sha256 is already specified.
     if ctx.attr.sha256 or ctx.attr.integrity:
         return ctx.repo_metadata(reproducible = True)
     integrity_override = {"integrity": download_info.integrity}
     return ctx.repo_metadata(attrs_for_reproducibility = update_attrs(ctx.attr, attrs.keys(), integrity_override))
+
+def workspace_and_buildfile(repository_ctx, fallback_build_file_content = None):
+    """Handles creating BUILD.bazel file for a repository.
+
+    Args:
+        repository_ctx: The repository context.
+        fallback_build_file_content: Content to use if neither build_file nor build_file_content is specified.
+    """
+    has_build_file_content = len(repository_ctx.attr.build_file_content) > 0
+    has_build_file_label = repository_ctx.attr.build_file != None
+
+    if has_build_file_content and has_build_file_label:
+        fail("must specify only one of \"build_file_content\" and \"build_file\"")
+
+    if has_build_file_content:
+        repository_ctx.file("BUILD.bazel", repository_ctx.attr.build_file_content)
+    elif has_build_file_label:
+        repository_ctx.file("BUILD.bazel", repository_ctx.read(repository_ctx.attr.build_file))
+    elif fallback_build_file_content:
+        repository_ctx.file("BUILD.bazel", fallback_build_file_content)
