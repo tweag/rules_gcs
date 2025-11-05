@@ -1,3 +1,5 @@
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
+
 exports_files(["check_file_hash.sh"])
 
 sh_test(
@@ -9,4 +11,3 @@ sh_test(
     ],
     data = ["@hello_world//:hello_world"],
 )
-

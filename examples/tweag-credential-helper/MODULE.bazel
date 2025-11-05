@@ -16,6 +16,10 @@ bazel_dep(
     name = "tweag-credential-helper",
     version = "0.0.1",
 )
+bazel_dep(
+    name = "rules_shell",
+    version = "0.6.1",
+)
 
 # This adds a dependency on a private GCS bucket
 # You need to run the following command once as a setup:

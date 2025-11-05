@@ -20,6 +20,10 @@ bazel_dep(
     name = "platforms",
     version = "0.0.10",
 )
+bazel_dep(
+    name = "rules_shell",
+    version = "0.6.1",
+)
 
 # Fetching individual blobs works just like `http_file`
 
