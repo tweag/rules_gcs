@@ -15,8 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-load("//gcs/private:url_encoding.bzl", "url_encode")
-load("//gcs/private:util.bzl", "bucket_url", "download_args", "parse_gs_url", "have_unblocked_downloads")
+load("//gcs/private:util.bzl", "download_args", "parse_gs_url", "have_unblocked_downloads", "update_integrity_attr")
 
 def _gcs_file_impl(repository_ctx):
     gs_url = repository_ctx.attr.url
@@ -26,6 +25,7 @@ def _gcs_file_impl(repository_ctx):
     # start download
     args = download_args(repository_ctx.attr, target["bucket_name"], target["remote_path"])
     waiter = repository_ctx.download(**args)
+    download_info = waiter
 
     # populate BUILD files
     repository_ctx.file("BUILD.bazel", "exports_files(glob([\"**\"]))".format(args["output"]))
@@ -36,7 +36,8 @@ def _gcs_file_impl(repository_ctx):
 
     # wait for download to finish
     if have_unblocked_downloads():
-        waiter.wait()
+        download_info = waiter.wait()
+    return update_integrity_attr(repository_ctx, _gcs_file_attrs, download_info)
 
 _gcs_file_doc = """Downloads a file from a GCS bucket and makes it available to be used as a file group.
 

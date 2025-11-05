@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-load("//gcs/private:util.bzl", "bucket_url", "download_and_extract_args", "parse_gs_url")
+load("//gcs/private:util.bzl", "download_and_extract_args", "parse_gs_url", "update_integrity_attr")
 
 def _gcs_archive_impl(repository_ctx):
     gs_url = repository_ctx.attr.url
@@ -24,7 +24,7 @@ def _gcs_archive_impl(repository_ctx):
 
     # download && extract the repo
     args = download_and_extract_args(repository_ctx.attr, target["bucket_name"], target["remote_path"])
-    repository_ctx.download_and_extract(**args)
+    download_info = repository_ctx.download_and_extract(**args)
 
     # apply patches after extraction has finished
     for patch in repository_ctx.attr.patches:
@@ -39,6 +39,7 @@ def _gcs_archive_impl(repository_ctx):
         repository_ctx.file("BUILD.bazel", repository_ctx.attr.build_file_content)
     if has_build_file_label:
         repository_ctx.file("BUILD.bazel", repository_ctx.read(repository_ctx.attr.build_file))
+    return update_integrity_attr(repository_ctx, _gcs_archive_attrs, download_info)
 
 _gcs_archive_doc = """Downloads a Bazel repository as a compressed archive file from a GCS bucket, decompresses it,
 and makes its targets available for binding.

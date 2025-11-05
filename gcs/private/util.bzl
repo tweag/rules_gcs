@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+load("@bazel_tools//tools/build_defs/repo:utils.bzl", "update_attrs")
 load("//gcs/private:jsonpath.bzl", "walk_jsonpath")
 load("//gcs/private:url_encoding.bzl", "url_encode")
 
@@ -141,3 +142,13 @@ def have_unblocked_downloads():
     if version[0] == 7 and version[1] < 1:
         return False
     return True
+
+def update_integrity_attr(ctx, attrs, download_info):
+    if not hasattr(ctx, "repo_metadata"):
+        # Old Bazel versions do not support repo_metadata
+        return None
+    # We don't need to override the integrity attribute if sha256 is already specified.
+    if ctx.attr.sha256 or ctx.attr.integrity:
+        return ctx.repo_metadata(reproducible = True)
+    integrity_override = {"integrity": download_info.integrity}
+    return ctx.repo_metadata(attrs_for_reproducibility = update_attrs(ctx.attr, attrs.keys(), integrity_override))

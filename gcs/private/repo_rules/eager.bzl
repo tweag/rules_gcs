@@ -24,7 +24,9 @@ def _eager_impl(repository_ctx):
 
     # start downloads
     waiters = []
+    reproducible = True
     for local_path, info in deps.items():
+        reproducible = reproducible and info_is_reproducible(info)
         args = info_to_download_args(repository_ctx.attr.bucket, local_path, info)
         waiters.append(repository_ctx.download(**args))
 
@@ -35,6 +37,11 @@ def _eager_impl(repository_ctx):
     if have_unblocked_downloads():
         for waiter in waiters:
             waiter.wait()
+
+    if hasattr(repository_ctx, "repo_metadata"):
+        # allows participating in repo contents cache
+        return repository_ctx.repo_metadata(reproducible = reproducible)
+    return None
 
 def info_to_download_args(bucket_name, local_path, info):
     args = {
@@ -50,6 +57,10 @@ def info_to_download_args(bucket_name, local_path, info):
     if "integrity" in info:
         args["integrity"] = info["integrity"]
     return args
+
+def info_is_reproducible(info):
+    digest = info.get("sha256") or info.get("integrity")
+    return len(digest) > 0
 
 eager = repository_rule(
     implementation = _eager_impl,
